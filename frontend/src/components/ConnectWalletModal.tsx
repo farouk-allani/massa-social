@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentWallet, setWallet } from "../redux/slices/accountSlice";
@@ -23,18 +23,34 @@ const ConnectWalletModal = (props: Props) => {
           sx={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "rgba(156, 156, 171, 0.5)",
+            // backgroundColor: "rgba(156, 156, 171, 0.5)",
+            backgroundColor: "white",
             zIndex: 1000,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            flexDirection: "column",
           }}
         >
+          <Box>
+            <Typography
+              variant="h2"
+              sx={{ mb: 2, color: (theme) => theme.palette.primary.main }}
+            >
+              Welcome to MassaNet
+            </Typography>
+            <Typography variant="h3" sx={{ mb: 4 }}>
+              The first fully on-chain social network built on the Massa
+              blockchain. Connect, share, and engage with others in a
+              decentralized way.
+            </Typography>
+          </Box>
+
           <Box
             sx={{
               backgroundColor: "white",
               borderRadius: "12px",
-              border: "1px solid #d3d3d3",
+              // border: "1px solid #d3d3d3",
               padding: "24px",
               maxWidth: "500px",
               width: "100%",
@@ -49,7 +65,7 @@ const ConnectWalletModal = (props: Props) => {
                 flexDirection: "column",
               }}
             >
-              <h1>Select wallet</h1>
+              {/* <h1>Select wallet</h1> */}
               <SelectMassaWallet
                 onClick={(walletName) => {
                   console.log(

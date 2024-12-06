@@ -2,7 +2,12 @@ import "./App.css";
 import { useMemo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createTheme } from "@mui/material/styles";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  CssBaseline,
+  ThemeProvider,
+} from "@mui/material";
 import { themeSettings } from "./theme";
 import { AppDispatch, RootState } from "./redux/store";
 import ConnectWalletModal from "./components/ConnectWalletModal";
@@ -43,11 +48,20 @@ function App() {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <ConnectWalletModal />
+            {/* <Backdrop
+              sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 9999,
+              }}
+              open={isCheckingProfile}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop> */}
             <Routes>
               {/* <Route path="/" element={<HomePage />} />
               <Route path="/profile/:userId" element={<ProfilePage />} /> */}
 
-              {user === null ? (
+              {user === null && isCheckingProfile == false ? (
                 <Route path="/*" element={<ProfileSetupPage />} />
               ) : (
                 <>

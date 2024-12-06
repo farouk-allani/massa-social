@@ -5,6 +5,7 @@ import {
   SmartContract,
   DeserializedResult,
   Serializable,
+  OperationStatus,
 } from "@massalabs/massa-web3";
 
 export class Profile implements Serializable<Profile> {
@@ -87,7 +88,7 @@ export const checkUserProfile = createAsyncThunk<
 
   try {
     const contractAddress =
-      "AS1uTgJhc7JbD7Z9zD5JY3ArTUhbvWmdKqHp4o1sUApJGWA5heE3";
+      "AS17bveA7u7x3Hog6tyXUhVLjSgko5mgDXnG6CUhxEVJVAoa5cXt";
     const args = new Args().addString(connectedAccount.address);
     // const contract = new SmartContract(provider, contractAddress);
     const contract = new SmartContract(connectedAccount, contractAddress);
@@ -134,19 +135,46 @@ export const updateUserProfile = createAsyncThunk<
 
   try {
     const contractAddress =
-      "AS1uTgJhc7JbD7Z9zD5JY3ArTUhbvWmdKqHp4o1sUApJGWA5heE3";
+      "AS17bveA7u7x3Hog6tyXUhVLjSgko5mgDXnG6CUhxEVJVAoa5cXt";
     const contract = new SmartContract(connectedAccount, contractAddress);
 
-    const args = new Args()
-      .addString(profileData.address)
-      .addString(profileData.name)
-      .addString(profileData.avatar)
-      .addString(profileData.bio);
+    // const args = new Args()
+    //   .addString(profileData.address)
+    //   .addString(profileData.name)
+    //   .addString(profileData.avatar)
+    //   .addString(profileData.bio);
+
+    // const newProfile = new Profile(
+    //   address,
+    //   name,
+    //   'https://www.google.com',
+    //   'Junior full stack dev',
+    // );
+
+    // const args = new Args().addSerializable(newProfile);
+
+    // const operationStatus = await operation.waitFinalExecution();
+
+    // if (operationStatus === OperationStatus.Success) {
+    //   console.log('Profile updated successfully');
+
+    const newProfile = new Profile(
+      connectedAccount.address,
+      profileData.name,
+      profileData.avatar,
+      profileData.bio
+    );
+    const args = new Args().addSerializable(newProfile).serialize();
 
     const operation = await contract.call("updateProfile", args);
 
-    await operation.waitFinalExecution();
-
+    const operationStatus = await operation.waitFinalExecution();
+    if (operationStatus === OperationStatus.Success) {
+      console.log("Profile updated successfully");
+    } else {
+      console.error("Failed to update profile:", operationStatus);
+      throw new Error("Failed to update profile");
+    }
     return profileData;
   } catch (error) {
     console.error("Error updating user profile:", error);
