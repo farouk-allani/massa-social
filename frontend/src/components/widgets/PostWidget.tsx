@@ -40,9 +40,9 @@ const PostWidget = ({
   const [isComments, setIsComments] = useState(false);
   // const dispatch = useDispatch();
   // const token = useSelector((state) => state.token);
-  const loggedInUserId = useSelector((state: RootState) => state.user.user._id);
-  const isLiked = Boolean(likes[loggedInUserId]);
-  const likeCount = Object.keys(likes).length;
+  // const loggedInUserId = useSelector((state: RootState) => state.user.user._id);
+  // const isLiked = Boolean(likes[loggedInUserId]);
+  // const likeCount = Object.keys(likes).length;
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -87,13 +87,13 @@ const PostWidget = ({
             <IconButton
             //  onClick={patchLike}
             >
-              {isLiked ? (
+              {/* {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
                 <FavoriteBorderOutlined />
-              )}
+              )} */}
             </IconButton>
-            <Typography>{likeCount}</Typography>
+            {/* <Typography>{likeCount}</Typography> */}
           </FlexBetween>
 
           <FlexBetween gap="0.3rem">

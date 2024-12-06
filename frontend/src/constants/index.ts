@@ -1,7 +1,7 @@
-export enum SUPPORTED_MASSA_WALLETS {
-  MASSASTATION = "MASSASTATION",
-  BEARBY = "BEARBY",
-}
+// export enum SUPPORTED_MASSA_WALLETS {
+//   MASSASTATION = "MASSASTATION",
+//   BEARBY = "BEARBY",
+// }
 
 export const MASSA_STATION_INSTALL = "https://station.massa.net";
 export const MASSA_STATION_STORE = "https://station.massa/web/store";

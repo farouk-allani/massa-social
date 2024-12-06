@@ -1,24 +1,22 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProvider } from "../redux/slices/accountSlice";
+import { setCurrentWallet, setWallet } from "../redux/slices/accountSlice";
 import SelectMassaWallet from "./SelectMassaWallet";
-import { SUPPORTED_MASSA_WALLETS } from "../constants";
 import { AppDispatch, RootState } from "../redux/store";
+import { Wallet, WalletName } from "@massalabs/wallet-provider";
 
 type Props = {};
 
 const ConnectWalletModal = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { currentProvider, providers, isFetching, connectedAccount } =
-    useSelector((state: RootState) => state.account);
-  const [selectedProvider, setSelectedProvider] = useState<
-    SUPPORTED_MASSA_WALLETS | undefined
-  >(currentProvider?.name() as SUPPORTED_MASSA_WALLETS);
-  if (
-    (!currentProvider && !isFetching) ||
-    (currentProvider && !connectedAccount)
-  ) {
+  const { currentWallet, wallets, isFetching, connectedAccount } = useSelector(
+    (state: RootState) => state.account
+  );
+  // const [selectedWalletName, setSelectedWalletName] = useState(
+  //   currentWallet?.name()
+  // );
+  if ((!currentWallet && !isFetching) || (currentWallet && !connectedAccount)) {
     return (
       <>
         <Box
@@ -40,43 +38,9 @@ const ConnectWalletModal = (props: Props) => {
               padding: "24px",
               maxWidth: "500px",
               width: "100%",
-              mx: { xs: "20px", sm: "0" }, // Responsive margin
+              mx: { xs: "20px", sm: "0" },
             }}
           >
-            {/* <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <IconButton onClick={handleClose}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-            >
-              <g clip-path="url(#clip0_640_30013)">
-                <path
-                  d="M15 5L5 15"
-                  stroke="#9C9CAB"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M5 5L15 15"
-                  stroke="#9C9CAB"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_640_30013">
-                  <rect width="20" height="20" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-          </IconButton>
-        </Box> */}
-
             <Box
               sx={{
                 display: "flex",
@@ -85,20 +49,24 @@ const ConnectWalletModal = (props: Props) => {
                 flexDirection: "column",
               }}
             >
-              <h1>Select wallet provider</h1>
+              <h1>Select wallet</h1>
               <SelectMassaWallet
-                onClick={(providerName) => {
-                  setSelectedProvider(providerName);
-                  const provider = providers.find(
-                    (p) => p.name() === providerName
+                onClick={(walletName) => {
+                  console.log(
+                    "Selected wallet loking for name exactly:",
+                    walletName
                   );
-                  console.log("providers", providers);
-                  console.log("This is the current provider", provider);
-                  if (provider) {
-                    dispatch(setProvider(provider));
-                  }
-                  if (!provider) {
-                    alert("lunch your massa wallet");
+                  // setSelectedWalletName(walletName as unknown as WalletName);
+                  const wallet = wallets.find(
+                    (w: Wallet) =>
+                      w.name() === (walletName as unknown as WalletName)
+                  );
+                  console.log("Available wallets:", wallets);
+                  console.log("Selected wallet:", wallet?.name());
+                  if (wallet) {
+                    dispatch(setWallet(wallet));
+                  } else {
+                    alert("Please launch your Massa wallet.");
                   }
                 }}
               />

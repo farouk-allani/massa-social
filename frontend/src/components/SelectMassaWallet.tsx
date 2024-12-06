@@ -1,22 +1,22 @@
 import React from "react";
 import { Container, Button, Stack, Typography } from "@mui/material";
-import { SUPPORTED_MASSA_WALLETS } from "../constants";
+import { WalletName } from "@massalabs/wallet-provider";
 
 interface SelectMassaWalletProps {
-  onClick: (providerName: SUPPORTED_MASSA_WALLETS) => void;
+  onClick: (providerName: WalletName) => void;
 }
 
 const walletsConfig = [
   {
-    name: "Massa-Station",
-    walletType: SUPPORTED_MASSA_WALLETS.MASSASTATION,
-    imgSrc: "/assets/images/massa-station.png", // Replace with actual path
+    name: "MASSASTATION",
+    walletType: WalletName.MassaStation,
+    imgSrc: "/assets/images/massa-station.png",
     imgAlt: "Massa Station logo",
   },
   {
-    name: "Bearby",
-    walletType: SUPPORTED_MASSA_WALLETS.BEARBY,
-    imgSrc: "/assets/images/bearby.png", // Replace with actual path
+    name: "BEARBY",
+    walletType: WalletName.Bearby,
+    imgSrc: "/assets/images/bearby.png",
     imgAlt: "Bearby logo",
   },
 ];
@@ -24,10 +24,6 @@ const walletsConfig = [
 const SelectMassaWallet = ({ onClick }: SelectMassaWalletProps) => {
   return (
     <Container maxWidth="lg">
-      {/* Optional heading */}
-      {/* <Typography variant="h4" align="center" gutterBottom>
-        Select your wallet
-      </Typography> */}
       <Stack direction="column" spacing={2}>
         {walletsConfig.map((wallet) => (
           <Button

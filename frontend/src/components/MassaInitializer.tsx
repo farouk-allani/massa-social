@@ -1,22 +1,29 @@
 import { ReactNode, useEffect } from "react";
-import { setProvider, setProviders } from "../redux/slices/accountSlice";
+import { setWallet, setWallets } from "../redux/slices/accountSlice";
 import { AppDispatch } from "../redux/store";
 import { useDispatch } from "react-redux";
-import { IProvider, providers } from "@massalabs/wallet-provider";
+import { Wallet, getWallets } from "@massalabs/wallet-provider";
 
 const MassaInitializer: React.FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   async function initAccountStore() {
-    const massaProviders = await providers();
+    const massaWallets = await getWallets();
 
-    dispatch(setProviders(massaProviders));
+    console.log("Available wallets:", massaWallets);
+    dispatch(setWallets(massaWallets));
+    const storedWalletName = localStorage.getItem("wallet");
+    console.log("Stored wallet in local storage:", storedWalletName);
 
-    massaProviders.map(async (p: IProvider) => {
-      if (localStorage.getItem("provider") === p.name()) {
-        dispatch(setProvider(p));
+    if (storedWalletName) {
+      const selectedWallet = massaWallets.find(
+        (wallet: Wallet) => wallet.name() === storedWalletName
+      );
+
+      if (selectedWallet) {
+        dispatch(setWallet(selectedWallet));
       }
-    });
+    }
   }
 
   useEffect(() => {

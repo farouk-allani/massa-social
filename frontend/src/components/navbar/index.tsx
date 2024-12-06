@@ -26,15 +26,14 @@ import FlexBetween from "../FlexBetween";
 import { setMode } from "../../redux/slices/userSlice";
 import { AppDispatch, RootState } from "../../redux/store";
 import {
-  setProvider,
-  setSelectedProvider,
+  setCurrentWallet,
+  setSelectedWallet,
 } from "../../redux/slices/accountSlice";
-import { SUPPORTED_MASSA_WALLETS } from "../../constants";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const { currentProvider } = useSelector((state: RootState) => state.account);
+  const { currentWallet } = useSelector((state: RootState) => state.account);
   const navigate = useNavigate();
   // const user = useSelector((state: RootState) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -50,11 +49,11 @@ const Navbar = () => {
   const fullName = "Farouk Allani";
 
   const handleMassaWalletDisconnect = async () => {
-    setSelectedProvider(undefined);
-    if (currentProvider?.name() === SUPPORTED_MASSA_WALLETS.BEARBY) {
-      await currentProvider?.disconnect();
+    setSelectedWallet(undefined);
+    if (currentWallet?.name() === "BEARBY") {
+      await currentWallet?.disconnect();
     }
-    dispatch(setProvider(undefined));
+    dispatch(setCurrentWallet(undefined));
   };
 
   return (

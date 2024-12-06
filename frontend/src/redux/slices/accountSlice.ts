@@ -1,54 +1,29 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  current,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+// accountSlice.ts
+
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AccountStoreState } from "../interfaces/account";
-import { Client, ClientFactory } from "@massalabs/massa-web3";
-import { IAccount, IProvider } from "@massalabs/wallet-provider";
+import { Wallet, WalletName } from "@massalabs/wallet-provider";
+import { Provider } from "@massalabs/massa-web3";
 import { toast } from "react-toastify";
-import { SUPPORTED_MASSA_WALLETS } from "../../constants";
 
 const initialState: AccountStoreState = {
   accounts: undefined,
   connectedAccount: undefined,
   accountObserver: undefined,
   networkObserver: undefined,
-  massaClient: undefined,
-  currentProvider: undefined,
-  providers: [],
+  currentWallet: undefined,
+  wallets: [],
   isFetching: false,
   chainId: undefined,
-  selectedProvider: undefined,
+  selectedWallet: undefined,
 };
 
-// Async thunk for refreshing Massa client
-export const refreshMassaClient = createAsyncThunk(
-  "account/refreshMassaClient",
-  async (_, { dispatch, getState, rejectWithValue }) => {
-    const state = getState() as { account: AccountStoreState };
-    const { currentProvider, connectedAccount } = state.account;
-
-    if (!currentProvider || !connectedAccount) {
-      return rejectWithValue("No provider or connected account found");
-    }
-    const massaClient = await ClientFactory.fromWalletProvider(
-      currentProvider,
-      connectedAccount
-    );
-    dispatch(setMassaClient(massaClient));
-    return massaClient;
-  }
-);
-
-// Async thunk for setting the current provider
-export const setProvider = createAsyncThunk(
-  "account/setProvider",
-  async (provider: IProvider | undefined, { dispatch, getState }) => {
+export const setWallet = createAsyncThunk(
+  "account/setWallet",
+  async (wallet: Wallet | undefined, { dispatch, getState }) => {
     const state = getState() as { account: AccountStoreState };
 
-    if (state.account.currentProvider?.name() !== provider?.name()) {
+    if (state.account.currentWallet?.name() !== wallet?.name()) {
       state.account.accountObserver?.unsubscribe();
       state.account.networkObserver?.unsubscribe();
       dispatch(
@@ -56,30 +31,31 @@ export const setProvider = createAsyncThunk(
       );
     }
 
-    if (!provider) {
-      dispatch(setCurrentProvider(undefined));
+    if (!wallet) {
+      dispatch(setCurrentWallet(undefined));
       dispatch(setConnectedAccount(undefined));
-      localStorage.removeItem("provider");
+      localStorage.removeItem("wallet");
       localStorage.removeItem("massastation_account");
       localStorage.removeItem("bearby_account");
-      dispatch(setMassaClient(undefined));
-      dispatch(setSelectedProvider(undefined));
+      dispatch(setSelectedWallet(undefined));
       dispatch(setAccounts([]));
       return;
     }
 
-    // Set current provider before any further actions
-    await dispatch(setCurrentProvider(provider));
+    // Set current wallet before any further actions
+    dispatch(setCurrentWallet(wallet));
 
     // Bearby wallet logic
-    if (provider.name() === SUPPORTED_MASSA_WALLETS.BEARBY) {
+    if (wallet.name() === WalletName.Bearby) {
       try {
-        await provider.connect();
-        const accounts = await provider.accounts();
+        await wallet.connect();
+        const accounts = await wallet.accounts();
+        console.log("Accounts:", accounts);
+
         const newAccount = accounts[0];
         dispatch(setConnectedAccount(newAccount));
 
-        const accountObserver = provider.listenAccountChanges(
+        const accountObserver = wallet.listenAccountChanges(
           (newAddress: string) => {
             const currentState = getState() as { account: AccountStoreState };
             handleBearbyAccountChange(
@@ -90,47 +66,38 @@ export const setProvider = createAsyncThunk(
           }
         );
 
-        const networkObserver = provider.listenNetworkChanges(async () => {
-          await dispatch(refreshMassaClient());
+        const networkObserver = wallet.listenNetworkChanges(async () => {
+          // el feature hethi available fi bearby
         });
 
         dispatch(setAccounts(accounts));
         dispatch(setObservers({ accountObserver, networkObserver }));
-        localStorage.setItem("provider", provider.name());
+        localStorage.setItem("wallet", wallet.name());
       } catch (error) {
         console.error("Error connecting to Bearby wallet:", error);
-        toast.error(`check your Bearby wallet!`);
+        toast.error(`Check your Bearby wallet!`);
       }
-    } else {
-      // Massastation wallet logic
-      const accounts = await provider.accounts();
-      console.log("accounts", accounts);
+    } else if (wallet.name() === WalletName.MassaStation) {
+      // MassaStation wallet logic
+      const accounts = await wallet.accounts();
       dispatch(setAccounts(accounts));
       const massastationAccount = localStorage.getItem("massastation_account");
 
-      if (!massastationAccount) {
-        dispatch(setConnectedAccount(accounts[0]));
-        localStorage.setItem("massastation_account", accounts[0].address());
-        localStorage.setItem("provider", provider.name());
-        return;
-      }
-      const selectedIndex = accounts.findIndex(
-        (account) => account.address() === massastationAccount
-      );
+      let selectedAccount = accounts[0];
 
-      const selectedAccount = accounts[selectedIndex];
-      console.log("Selected Account:", selectedAccount);
+      if (massastationAccount) {
+        const selectedIndex = accounts.findIndex(
+          (account) => account.address === massastationAccount
+        );
+        if (selectedIndex !== -1) {
+          selectedAccount = accounts[selectedIndex];
+        }
+      }
 
       dispatch(setConnectedAccount(selectedAccount));
 
-      // Refresh Massa Client after setting accounts and connected account
-      await dispatch(refreshMassaClient());
-
-      localStorage.setItem(
-        "massastation_account",
-        accounts[selectedIndex].address()
-      );
-      localStorage.setItem("provider", provider.name());
+      localStorage.setItem("massastation_account", selectedAccount.address);
+      localStorage.setItem("wallet", wallet.name());
     }
   }
 );
@@ -139,45 +106,37 @@ const accountSlice = createSlice({
   name: "account",
   initialState,
   reducers: {
-    setProviders: (state, action: PayloadAction<IProvider[]>) => {
-      state.providers = action.payload;
+    setWallets: (state, action: PayloadAction<Wallet[]>) => {
+      state.wallets = action.payload;
       if (
-        !state.providers.some((p) => p.name() === state.currentProvider?.name())
+        !state.wallets.some((w) => w.name() === state.currentWallet?.name())
       ) {
-        state.massaClient = undefined;
-        state.currentProvider = undefined;
+        state.currentWallet = undefined;
         state.connectedAccount = undefined;
         state.accounts = undefined;
       }
     },
-    setCurrentProvider: (
-      state,
-      action: PayloadAction<IProvider | undefined>
-    ) => {
-      state.currentProvider = action.payload;
+    setCurrentWallet: (state, action: PayloadAction<Wallet | undefined>) => {
+      state.currentWallet = action.payload;
       state.isFetching = false;
     },
     setConnectedAccount: (
       state,
-      action: PayloadAction<IAccount | undefined>
+      action: PayloadAction<Provider | undefined>
     ) => {
       state.connectedAccount = action.payload;
     },
-    setMassaClient: (state, action: PayloadAction<Client | undefined>) => {
-      // console.log('set massa client')
-      state.massaClient = action.payload;
-    },
-    setAccounts: (state, action: PayloadAction<IAccount[]>) => {
+    setAccounts: (state, action: PayloadAction<Provider[]>) => {
       state.accounts = action.payload;
     },
     setChainId: (state, action: PayloadAction<string>) => {
       state.chainId = action.payload;
     },
-    setSelectedProvider: (
+    setSelectedWallet: (
       state,
-      action: PayloadAction<SUPPORTED_MASSA_WALLETS | undefined>
+      action: PayloadAction<WalletName | undefined>
     ) => {
-      state.selectedProvider = action.payload;
+      state.selectedWallet = action.payload;
     },
     setObservers: (
       state,
@@ -191,29 +150,25 @@ const accountSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(refreshMassaClient.fulfilled, (state, action) => {
-      state.massaClient = action.payload;
-    });
-    builder.addCase(setProvider.pending, (state) => {
+    builder.addCase(setWallet.pending, (state) => {
       state.isFetching = true;
     });
-    builder.addCase(setProvider.fulfilled, (state) => {
+    builder.addCase(setWallet.fulfilled, (state) => {
       state.isFetching = false;
     });
-    builder.addCase(setProvider.rejected, (state) => {
+    builder.addCase(setWallet.rejected, (state) => {
       state.isFetching = false;
     });
   },
 });
 
 export const {
-  setProviders,
-  setCurrentProvider,
+  setWallets,
+  setCurrentWallet,
   setConnectedAccount,
-  setMassaClient,
   setAccounts,
   setChainId,
-  setSelectedProvider,
+  setSelectedWallet,
   setObservers,
 } = accountSlice.actions;
 
@@ -225,11 +180,11 @@ async function handleBearbyAccountChange(
   state: AccountStoreState,
   dispatch: any
 ) {
-  const { connectedAccount, currentProvider } = state;
-  const oldAddress = connectedAccount?.address();
+  const { connectedAccount, currentWallet } = state;
+  const oldAddress = connectedAccount?.address;
 
   if (newAddress !== oldAddress) {
-    const newAccounts = await currentProvider?.accounts();
+    const newAccounts = await currentWallet?.accounts();
     if (newAccounts?.length) {
       const newAccount = newAccounts[0];
       dispatch(setConnectedAccount(newAccount));

@@ -1,13 +1,13 @@
-import { IAccount, IProvider } from "@massalabs/wallet-provider";
-import { Client } from "@massalabs/massa-web3";
-import { SUPPORTED_MASSA_WALLETS } from "../../constants";
+import { Wallet } from "@massalabs/wallet-provider";
+import { Provider } from "@massalabs/massa-web3";
+import { WalletName } from "@massalabs/wallet-provider";
 
 export interface AccountStoreState {
-  connectedAccount?: IAccount;
-  massaClient?: Client;
-  accounts?: IAccount[];
-  currentProvider?: IProvider;
-  providers: IProvider[];
+  connectedAccount?: Provider;
+  massaProvider?: Provider;
+  accounts?: Provider[];
+  currentWallet?: Wallet;
+  wallets: Wallet[];
   isFetching: boolean;
   accountObserver?: {
     unsubscribe: () => void;
@@ -16,5 +16,5 @@ export interface AccountStoreState {
     unsubscribe: () => void;
   };
   chainId?: string;
-  selectedProvider?: SUPPORTED_MASSA_WALLETS | undefined;
+  selectedWallet?: WalletName | undefined;
 }

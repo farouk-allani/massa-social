@@ -11,7 +11,7 @@ import FlexBetween from "../FlexBetween";
 import UserImage from "../UserImage";
 
 type UserWidgetProps = {
-  userId: string | undefined;
+  userId: string;
   picturePath: string;
 };
 
