@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import ConnectWalletModal from "../ConnectWalletModal";
+import { features } from "../../lib/data";
 
 type Props = {};
 
@@ -217,7 +218,7 @@ const LandingPage = (props: Props) => {
           </Button>
         </Box>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -228,7 +229,103 @@ const LandingPage = (props: Props) => {
           backgroundColor: "#fff",
           height: "100vh",
         }}
-      ></Box>
+      ></Box> */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          padding: "4rem 2rem",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{
+            color: (theme) => theme.palette.neutral.dark,
+            fontWeight: "bold",
+            marginBottom: "2rem",
+          }}
+        >
+          Why Choose Massabook?
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "2rem",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          {features.map((feature, index) => (
+            <Box
+              key={index}
+              sx={{
+                maxWidth: "300px",
+                textAlign: "center",
+                padding: "1.5rem",
+                backgroundColor: "#fff",
+                borderRadius: "8px",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Box
+                component="img"
+                src={feature.icon}
+                alt={feature.title}
+                sx={{ width: "auto", height: "80px", marginBottom: "1rem" }}
+              />
+              <Typography variant="h5" sx={{ marginBottom: "0.5rem" }}>
+                {feature.title}
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {feature.description}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          padding: "4rem 2rem",
+          backgroundColor: "#FFCCCC",
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{
+            color: "#fff",
+            fontWeight: "bold",
+            marginBottom: "2rem",
+          }}
+        >
+          Ready to Join the Future of Social Networking?
+        </Typography>
+        <Button
+          color="primary"
+          size="large"
+          sx={{
+            backgroundColor: (theme) => theme.palette.primary.main,
+            color: "#fff",
+            textTransform: "none",
+            paddingX: "2rem",
+            paddingY: "1rem",
+            borderRadius: "8px",
+            fontWeight: "bold",
+            "&:hover": {
+              backgroundColor: (theme) => theme.palette.primary.dark,
+            },
+          }}
+          onClick={() => setOpenConnectWalletModal(true)}
+        >
+          Get Started
+        </Button>
+      </Box>
     </>
   );
 };
