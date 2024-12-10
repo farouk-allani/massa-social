@@ -1,99 +1,144 @@
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentWallet, setWallet } from "../redux/slices/accountSlice";
 import SelectMassaWallet from "./SelectMassaWallet";
 import { AppDispatch, RootState } from "../redux/store";
 import { Wallet, WalletName } from "@massalabs/wallet-provider";
+import { useNavigate } from "react-router-dom";
 
-type Props = {};
+type Props = {
+  openConnectWalletModal: boolean;
+  setOpenConnectWalletModal: (open: boolean) => void;
+};
 
-const ConnectWalletModal = (props: Props) => {
+const ConnectWalletModal = ({
+  openConnectWalletModal,
+  setOpenConnectWalletModal,
+}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { currentWallet, wallets, isFetching, connectedAccount } = useSelector(
     (state: RootState) => state.account
   );
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    setOpenConnectWalletModal(false);
+  };
+  const stopPropagation = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
   // const [selectedWalletName, setSelectedWalletName] = useState(
   //   currentWallet?.name()
   // );
-  if ((!currentWallet && !isFetching) || (currentWallet && !connectedAccount)) {
-    return (
-      <>
+  if (!openConnectWalletModal) return null;
+  // if ((!currentWallet && !isFetching) || (currentWallet && !connectedAccount)) {
+  return (
+    <>
+      <Box
+        sx={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(156, 156, 171, 0.5)",
+          // backgroundColor: "white",
+          zIndex: 10000,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+        onClick={handleClose}
+      >
         <Box
           sx={{
-            position: "fixed",
-            inset: 0,
-            // backgroundColor: "rgba(156, 156, 171, 0.5)",
             backgroundColor: "white",
-            zIndex: 1000,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
+            borderRadius: "16px",
+            // border: "1px solid #d3d3d3",
+            padding: "29px 24px 24px",
+            // padding: "15px",
+            maxWidth: "360px",
+            width: "100%",
+            mx: { xs: "20px", sm: "0" },
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.02)",
           }}
+          onClick={stopPropagation}
         >
-          <Box>
-            <Typography
-              variant="h2"
-              sx={{ mb: 2, color: (theme) => theme.palette.primary.main }}
-            >
-              Welcome to MassaNet
-            </Typography>
-            <Typography variant="h3" sx={{ mb: 4 }}>
-              The first fully on-chain social network built on the Massa
-              blockchain. Connect, share, and engage with others in a
-              decentralized way.
-            </Typography>
-          </Box>
-
           <Box
             sx={{
-              backgroundColor: "white",
-              borderRadius: "12px",
-              // border: "1px solid #d3d3d3",
-              padding: "24px",
-              maxWidth: "500px",
-              width: "100%",
-              mx: { xs: "20px", sm: "0" },
+              display: "flex",
+              justifyContent: "flex-end",
+              cursor: "pointer",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "flex-start",
-                mb: 3,
-                flexDirection: "column",
-              }}
-            >
-              {/* <h1>Select wallet</h1> */}
-              <SelectMassaWallet
-                onClick={(walletName) => {
-                  console.log(
-                    "Selected wallet loking for name exactly:",
-                    walletName
-                  );
-                  // setSelectedWalletName(walletName as unknown as WalletName);
-                  const wallet = wallets.find(
-                    (w: Wallet) =>
-                      w.name() === (walletName as unknown as WalletName)
-                  );
-                  console.log("Available wallets:", wallets);
-                  console.log("Selected wallet:", wallet?.name());
-                  if (wallet) {
-                    dispatch(setWallet(wallet));
-                  } else {
-                    alert("Please launch your Massa wallet.");
-                  }
-                }}
-              />
+            {/* <IconButton onClick={handleClose}> */}
+            <Box onClick={handleClose}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+              >
+                <g clip-path="url(#clip0_640_30013)">
+                  <path
+                    d="M15 5L5 15"
+                    stroke="#9C9CAB"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M5 5L15 15"
+                    stroke="#9C9CAB"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_640_30013">
+                    <rect width="20" height="20" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
             </Box>
+            {/* </IconButton> */}
+          </Box>
+          <Typography
+            variant="h5"
+            sx={{ color: (theme) => theme.palette.neutral.dark, mb: 2 }}
+          >
+            Connect Wallet
+          </Typography>
+          <Box>
+            <SelectMassaWallet
+              onClick={async (walletName) => {
+                console.log(
+                  "Selected wallet loking for name exactly:",
+                  walletName
+                );
+                // setSelectedWalletName(walletName as unknown as WalletName);
+                const wallet = wallets.find(
+                  (w: Wallet) =>
+                    w.name() === (walletName as unknown as WalletName)
+                );
+                console.log("Available wallets:", wallets);
+                console.log("Selected wallet:", wallet?.name());
+                if (wallet) {
+                  await dispatch(setWallet(wallet));
+                } else {
+                  alert("Please launch your Massa wallet.");
+                }
+              }}
+            />
           </Box>
         </Box>
-      </>
-    );
-  }
-  return null;
+      </Box>
+    </>
+  );
 };
+//   return null;
+// };
 
 export default ConnectWalletModal;
 

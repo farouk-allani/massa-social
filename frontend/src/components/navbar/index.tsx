@@ -9,6 +9,7 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  Avatar,
 } from "@mui/material";
 import {
   Search,
@@ -23,19 +24,23 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "../FlexBetween";
-import { setMode } from "../../redux/slices/userSlice";
+import { setMode, setUser } from "../../redux/slices/userSlice";
 import { AppDispatch, RootState } from "../../redux/store";
 import {
+  setAccounts,
+  setConnectedAccount,
   setCurrentWallet,
   setSelectedWallet,
 } from "../../redux/slices/accountSlice";
+import { shortenAddress } from "../../lib/utils";
+import { WalletName } from "@massalabs/wallet-provider";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { currentWallet } = useSelector((state: RootState) => state.account);
   const navigate = useNavigate();
-  // const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -46,14 +51,25 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   // const fullName = `${user.firstName} ${user.lastName}`;
-  const fullName = "Farouk Allani";
+  const fullName = shortenAddress(user.user?.address || "", 3);
 
   const handleMassaWalletDisconnect = async () => {
     setSelectedWallet(undefined);
-    if (currentWallet?.name() === "BEARBY") {
+    if (currentWallet?.name() === WalletName.Bearby) {
       await currentWallet?.disconnect();
     }
-    dispatch(setCurrentWallet(undefined));
+    if (currentWallet?.name() === WalletName.MassaStation) {
+      localStorage.removeItem("massastation_account");
+      localStorage.removeItem("wallet");
+      dispatch(setAccounts([]));
+      dispatch(setConnectedAccount(undefined));
+    }
+    await dispatch(setCurrentWallet(undefined));
+    await dispatch(setUser(null));
+    console.log("Navigating to /");
+    // navigate("/", { replace: true });
+    setTimeout(() => navigate("/", { replace: true }), 100);
+    // window.location.href = "/";
   };
 
   return (
@@ -68,7 +84,7 @@ const Navbar = () => {
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)"
           color="primary"
-          onClick={() => navigate("/home")}
+          // onClick={() => navigate("/home")}
           sx={{
             "&:hover": {
               color: primaryLight,
@@ -76,7 +92,7 @@ const Navbar = () => {
             },
           }}
         >
-          MassaNet
+          Massabook
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -108,6 +124,7 @@ const Navbar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
+
           <FormControl variant="standard">
             <Select
               value={fullName}
@@ -137,6 +154,18 @@ const Navbar = () => {
               </MenuItem>
             </Select>
           </FormControl>
+          <Avatar
+            src={user.user?.avatar || "/images/avatar default.png"}
+            alt={user.user?.name || "Placeholder Avatar"}
+            sx={{
+              width: 40,
+              height: 40,
+              cursor: "pointer",
+              "&:hover": {
+                border: `2px solid ${primaryLight}`,
+              },
+            }}
+          />
         </FlexBetween>
       ) : (
         <IconButton

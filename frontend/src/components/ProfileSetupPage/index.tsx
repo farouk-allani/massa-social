@@ -14,6 +14,7 @@ import { updateUserProfile, Profile } from "../../redux/slices/userSlice";
 import { AppDispatch, RootState } from "../../redux/store";
 import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 
 const ProfileSetupPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,6 +23,7 @@ const ProfileSetupPage = () => {
   const [avatarBase64, setAvatarBase64] = useState<string | null>(null);
   const [bio, setBio] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -78,7 +80,8 @@ const ProfileSetupPage = () => {
         error: "Failed to save profile.",
       });
 
-      window.location.href = "/";
+      window.location.href = "/home";
+      // navigate("/home");
     } catch (error) {
       console.error("Error saving profile:", error);
     } finally {

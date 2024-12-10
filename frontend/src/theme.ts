@@ -15,17 +15,29 @@ export const colorTokens = {
     900: "#0A0A0A",
     1000: "#000000",
   },
+  // primary: {
+  //   50: "#E6FBFF",
+  //   100: "#CCF7FE",
+  //   200: "#99EEFD",
+  //   300: "#66E6FC",
+  //   400: "#33DDFB",
+  //   500: "#00D5FA",
+  //   600: "#00A0BC",
+  //   700: "#006B7D",
+  //   800: "#00353F",
+  //   900: "#001519",
+  // },
   primary: {
-    50: "#E6FBFF",
-    100: "#CCF7FE",
-    200: "#99EEFD",
-    300: "#66E6FC",
-    400: "#33DDFB",
-    500: "#00D5FA",
-    600: "#00A0BC",
-    700: "#006B7D",
-    800: "#00353F",
-    900: "#001519",
+    50: "#FFE6E6", // Lightest red
+    100: "#FFCCCC", // Very light red
+    200: "#FF9999", // Light red
+    300: "#FF6666", // Medium light red
+    400: "#FF3333", // Slightly darker red
+    500: "#FF0000", // Base red
+    600: "#CC0000", // Darker red
+    700: "#990000", // Even darker red
+    800: "#660000", // Very dark red
+    900: "#330000", // Darkest red
   },
 };
 

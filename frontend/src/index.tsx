@@ -8,18 +8,21 @@ import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import MassaInitializer from "./components/MassaInitializer";
 import "react-toastify/dist/ReactToastify.css";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   // <React.StrictMode>
-  <Provider store={store}>
-    <MassaInitializer>
-      <ToastContainer />
-      <App />
-    </MassaInitializer>
-  </Provider>
+  <BrowserRouter>
+    <Provider store={store}>
+      <MassaInitializer>
+        <ToastContainer />
+        <App />
+      </MassaInitializer>
+    </Provider>
+  </BrowserRouter>
 
   // </React.StrictMode>
 );

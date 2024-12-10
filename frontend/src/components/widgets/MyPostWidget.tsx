@@ -43,6 +43,7 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
+  const user = useSelector((state: RootState) => state.user);
 
   // const handlePost = async () => {
   //   const formData = new FormData();
@@ -88,7 +89,9 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
   return (
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
-        <UserImage image={picturePath} />
+        <UserImage
+          image={user.user?.avatar || "/assets/images/avatar default.png"}
+        />
         <InputBase
           placeholder="What's on your mind..."
           // onChange={(e) => setPost(e.target.value)}
@@ -160,7 +163,7 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
           </Typography>
         </FlexBetween>
 
-        {isNonMobileScreens ? (
+        {/* {isNonMobileScreens ? (
           <>
             <FlexBetween gap="0.25rem">
               <GifBoxOutlined sx={{ color: mediumMain }} />
@@ -181,7 +184,7 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
           <FlexBetween gap="0.25rem">
             <MoreHorizOutlined sx={{ color: mediumMain }} />
           </FlexBetween>
-        )}
+        )} */}
 
         <Button
           // disabled={!post}

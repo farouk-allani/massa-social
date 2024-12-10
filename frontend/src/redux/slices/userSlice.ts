@@ -38,17 +38,12 @@ export class Profile implements Serializable<Profile> {
   }
 }
 
-export interface ProfileType {
-  firstName: string;
-  lastName: string;
-  // location: string;
-  // occupation: string;
-  // address: Address;
-  address: string;
-  name: string;
-  avatar: string;
-  bio: string;
-}
+// export interface ProfileType {
+//   address: string;
+//   name: string;
+//   avatar: string;
+//   bio: string;
+// }
 interface UserState {
   mode: "light" | "dark";
   user: Profile | null;
@@ -70,22 +65,6 @@ export const checkUserProfile = createAsyncThunk<
     return null;
   }
 
-  // const walletList = await getWallets();
-  // const wallet = walletList.find((provider) => provider.name() === "BEARBY");
-  // const accounts = await wallet?.accounts();
-  // if (!accounts || accounts.length === 0) {
-  //   console.error("No accounts found");
-  //   return null;
-  // }
-  // const provider = accounts[0];
-
-  // console.log("current provider", currentWallet);
-  // console.log("connected account", connectedAccount);
-  // console.log("accounts", accounts);
-  // console.log("provider", provider);
-
-  // const newProvider = Web3Provider.buildnet(connectedAccount as any);
-
   try {
     const contractAddress =
       "AS17bveA7u7x3Hog6tyXUhVLjSgko5mgDXnG6CUhxEVJVAoa5cXt";
@@ -103,6 +82,8 @@ export const checkUserProfile = createAsyncThunk<
       console.warn("No profile data returned from contract.");
       return null;
     }
+
+    console.log("result", result);
 
     const argsForDeserialization = new Args(result.value);
     const profile = argsForDeserialization.nextSerializable<Profile>(Profile);
@@ -138,26 +119,6 @@ export const updateUserProfile = createAsyncThunk<
       "AS17bveA7u7x3Hog6tyXUhVLjSgko5mgDXnG6CUhxEVJVAoa5cXt";
     const contract = new SmartContract(connectedAccount, contractAddress);
 
-    // const args = new Args()
-    //   .addString(profileData.address)
-    //   .addString(profileData.name)
-    //   .addString(profileData.avatar)
-    //   .addString(profileData.bio);
-
-    // const newProfile = new Profile(
-    //   address,
-    //   name,
-    //   'https://www.google.com',
-    //   'Junior full stack dev',
-    // );
-
-    // const args = new Args().addSerializable(newProfile);
-
-    // const operationStatus = await operation.waitFinalExecution();
-
-    // if (operationStatus === OperationStatus.Success) {
-    //   console.log('Profile updated successfully');
-
     const newProfile = new Profile(
       connectedAccount.address,
       profileData.name,
@@ -189,6 +150,9 @@ const userSlice = createSlice({
     setMode: (state) => {
       state.mode = state.mode === "light" ? "dark" : "light";
     },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(updateUserProfile.fulfilled, (state, action) => {
@@ -206,6 +170,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setMode } = userSlice.actions;
+export const { setMode, setUser } = userSlice.actions;
 
 export default userSlice.reducer;
