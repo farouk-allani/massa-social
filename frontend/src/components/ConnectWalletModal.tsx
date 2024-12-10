@@ -6,6 +6,7 @@ import SelectMassaWallet from "./SelectMassaWallet";
 import { AppDispatch, RootState } from "../redux/store";
 import { Wallet, WalletName } from "@massalabs/wallet-provider";
 import { useNavigate } from "react-router-dom";
+import { MASSA_STATION_INSTALL } from "../constants";
 
 type Props = {
   openConnectWalletModal: boolean;
@@ -66,10 +67,18 @@ const ConnectWalletModal = ({
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               cursor: "pointer",
             }}
           >
+            <Box></Box>
+            <Typography
+              variant="h5"
+              sx={{ color: (theme) => theme.palette.neutral.dark, mb: 2 }}
+              fontWeight={500}
+            >
+              Connect Wallet
+            </Typography>
             {/* <IconButton onClick={handleClose}> */}
             <Box onClick={handleClose}>
               <svg
@@ -104,12 +113,7 @@ const ConnectWalletModal = ({
             </Box>
             {/* </IconButton> */}
           </Box>
-          <Typography
-            variant="h5"
-            sx={{ color: (theme) => theme.palette.neutral.dark, mb: 2 }}
-          >
-            Connect Wallet
-          </Typography>
+
           <Box>
             <SelectMassaWallet
               onClick={async (walletName) => {
@@ -132,6 +136,22 @@ const ConnectWalletModal = ({
               }}
             />
           </Box>
+          <Typography
+            variant="body1"
+            sx={{
+              mt: 1,
+              color: (theme) => theme.palette.neutral.medium,
+              cursor: "pointer",
+              ":hover": {
+                color: (theme) => theme.palette.neutral.dark,
+              },
+            }}
+            onClick={() => {
+              window.open(MASSA_STATION_INSTALL, "_blank");
+            }}
+          >
+            I don’t have a wallet
+          </Typography>
         </Box>
       </Box>
     </>

@@ -62,6 +62,7 @@ const SelectMassaWallet = ({ onClick }: SelectMassaWalletProps) => {
           <Typography
             variant="h5"
             component="span"
+            fontWeight={500}
             sx={{ color: (theme) => theme.palette.neutral.dark }}
           >
             {`${wallet.name}`}
