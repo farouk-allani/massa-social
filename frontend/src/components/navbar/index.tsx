@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -38,7 +38,9 @@ import { WalletName } from "@massalabs/wallet-provider";
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const { currentWallet } = useSelector((state: RootState) => state.account);
+  const { currentWallet, accounts, connectedAccount } = useSelector(
+    (state: RootState) => state.account
+  );
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -49,14 +51,41 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
+  const [selectedAccount, setSelectedAccount] = useState(
+    connectedAccount?.address || ""
+  );
+  console.log("connected account address", connectedAccount?.address);
 
   // const fullName = `${user.firstName} ${user.lastName}`;
   const fullName = shortenAddress(user.user?.address || "", 3);
 
+  const handleAccountChange = async (selectedAddress: string) => {
+    setSelectedAccount(selectedAddress);
+    if (currentWallet?.name() === WalletName.MassaStation) {
+      const newAccount = (accounts ?? []).find(
+        (acc) => acc.address === selectedAddress
+      );
+
+      if (newAccount) {
+        console.log("Switching to account:", newAccount.address);
+        // Update Redux state with the new account
+        dispatch(setConnectedAccount(newAccount));
+        // Optionally update localStorage
+        localStorage.setItem("massastation_account", newAccount.address);
+        // Optionally refresh the app state
+        navigate("/home");
+      }
+    }
+  };
+
   const handleMassaWalletDisconnect = async () => {
     setSelectedWallet(undefined);
+    console.log("Disconnecting from Massa Wallet...");
+    console.log("Current wallet name:", currentWallet?.name());
     if (currentWallet?.name() === WalletName.Bearby) {
+      console.log("inside bearby");
       await currentWallet?.disconnect();
+      console.log("inside bearby after await");
     }
     if (currentWallet?.name() === WalletName.MassaStation) {
       localStorage.removeItem("massastation_account");
@@ -72,6 +101,10 @@ const Navbar = () => {
     // window.location.href = "/";
   };
 
+  useEffect(() => {
+    setSelectedAccount(connectedAccount?.address || "");
+  }, [connectedAccount]);
+
   return (
     <FlexBetween
       padding="1rem 6%"
@@ -80,20 +113,27 @@ const Navbar = () => {
       }}
     >
       <FlexBetween gap="1.75rem">
-        <Typography
-          fontWeight="bold"
-          fontSize="clamp(1rem, 2rem, 2.25rem)"
-          color="primary"
-          // onClick={() => navigate("/home")}
-          sx={{
-            "&:hover": {
-              color: primaryLight,
-              cursor: "pointer",
-            },
-          }}
-        >
-          Massabook
-        </Typography>
+        <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <Box
+            component="img"
+            src="/assets/images/massa.jpg"
+            sx={{ width: 40, height: 40, borderRadius: "50%" }}
+          />
+          <Typography
+            fontWeight="bold"
+            fontSize="clamp(1rem, 2rem, 2.25rem)"
+            // onClick={() => navigate("/home")}
+            sx={{
+              color: (theme) => theme.palette.neutral.dark,
+              // "&:hover": {
+              //   color: primaryLight,
+              //   cursor: "pointer",
+              // },
+            }}
+          >
+            Massabook
+          </Typography>
+        </Box>
         {isNonMobileScreens && (
           <FlexBetween
             sx={{
@@ -127,7 +167,7 @@ const Navbar = () => {
 
           <FormControl variant="standard">
             <Select
-              value={fullName}
+              value={selectedAccount}
               sx={{
                 backgroundColor: neutralLight,
                 width: "150px",
@@ -143,9 +183,22 @@ const Navbar = () => {
               }}
               input={<InputBase />}
             >
-              <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
-              </MenuItem>
+              {currentWallet?.name() === WalletName.MassaStation ? (
+                (accounts ?? []).map((account) => (
+                  <MenuItem
+                    key={account.address}
+                    value={account.address}
+                    onClick={() => handleAccountChange(account.address)}
+                  >
+                    {/* {account.accountName}  */}
+                    {shortenAddress(account.address, 3)}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value={selectedAccount}>
+                  <Typography>{shortenAddress(selectedAccount, 3)}</Typography>
+                </MenuItem>
+              )}
               <MenuItem
                 //  onClick={() => dispatch(setLogout())}
                 onClick={handleMassaWalletDisconnect}
@@ -240,9 +293,7 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem
-                // onClick={() => dispatch(setLogout())}
-                >
+                <MenuItem onClick={handleMassaWalletDisconnect}>
                   Log Out
                 </MenuItem>
               </Select>

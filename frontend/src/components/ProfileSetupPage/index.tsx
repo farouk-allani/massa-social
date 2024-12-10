@@ -8,13 +8,14 @@ import {
   Backdrop,
   CircularProgress,
 } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfile, Profile } from "../../redux/slices/userSlice";
 import { AppDispatch, RootState } from "../../redux/store";
 import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../navbar";
 
 const ProfileSetupPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -89,6 +90,13 @@ const ProfileSetupPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (!connectedAccount) {
+      console.error("No connected account found, redirecting to /");
+      navigate("/");
+    }
+  }, [connectedAccount, navigate]);
+
   return (
     <>
       <Backdrop
@@ -97,6 +105,8 @@ const ProfileSetupPage = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+
+      <Navbar />
 
       <Box
         width="100%"

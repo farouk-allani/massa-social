@@ -125,6 +125,7 @@ const accountSlice = createSlice({
       action: PayloadAction<Provider | undefined>
     ) => {
       state.connectedAccount = action.payload;
+      console.log("Updated connected account:", action.payload);
     },
     setAccounts: (state, action: PayloadAction<Provider[]>) => {
       state.accounts = action.payload;
