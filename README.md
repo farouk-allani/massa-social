@@ -31,9 +31,7 @@
    - [5. Post Functions](#5-post-functions)
    - [6. Interaction Functions](#6-interaction-functions)
    - [7. Moderation Functions](#7-moderation-functions)
-6. [Security Considerations](#security-considerations)
-7. [Best Practices](#best-practices)
-8. [Conclusion](#conclusion)
+
 
 ---
 
