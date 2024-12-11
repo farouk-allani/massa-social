@@ -6,6 +6,7 @@ const SuggestedPagesWidget = () => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
+  const main = palette.neutral.main;
 
   const suggestedPages = [
     {
@@ -48,7 +49,12 @@ const SuggestedPagesWidget = () => {
               sx={{ width: 48, height: 48 }}
             />
             <Box>
-              <Typography variant="subtitle1" fontWeight="600" textAlign="left">
+              <Typography
+                variant="subtitle1"
+                fontWeight="600"
+                textAlign="left"
+                color={main}
+              >
                 {page.name}
               </Typography>
               <Typography color={medium} variant="body2" textAlign="left">

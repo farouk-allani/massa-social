@@ -113,7 +113,15 @@ const Navbar = () => {
       }}
     >
       <FlexBetween gap="1.75rem">
-        <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "10px",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={() => navigate("/home")}
+        >
           <Box
             component="img"
             src="/assets/images/massa.jpg"

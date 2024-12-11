@@ -3,8 +3,18 @@ import {
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
+  Telegram,
+  X,
+  AddCircleOutline,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+  IconButton,
+  Button,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import WidgetWrapper from "../WidgetWrapper";
 import FlexBetween from "../FlexBetween";
@@ -114,15 +124,15 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
       {/* THIRD ROW */}
       <Box p="1rem 0">
         <FlexBetween mb="0.5rem">
-          <Typography color={medium}>Who's viewed your profile</Typography>
+          <Typography color={medium}>Total Followers</Typography>
           <Typography color={main} fontWeight="500">
-            {viewedProfile}
+            250
           </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography color={medium}>Impressions of your post</Typography>
+          <Typography color={medium}>Communities Joined</Typography>
           <Typography color={main} fontWeight="500">
-            {impressions}
+            8
           </Typography>
         </FlexBetween>
       </Box>
@@ -131,16 +141,23 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
 
       {/* FOURTH ROW */}
       <Box p="1rem 0">
-        <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
+        <Typography
+          fontSize="1rem"
+          color={main}
+          fontWeight="500"
+          mb="1rem"
+          textAlign="left"
+        >
           Social Profiles
         </Typography>
 
         <FlexBetween gap="1rem" mb="0.5rem">
           <FlexBetween gap="1rem">
-            <img src="../assets/twitter.png" alt="twitter" />
+            {/* <img src="../assets/twitter.png" alt="twitter" /> */}
+            <X sx={{ color: main }} />
             <Box>
-              <Typography color={main} fontWeight="500">
-                Twitter
+              <Typography color={main} fontWeight="500" textAlign="left">
+                X
               </Typography>
               <Typography color={medium}>Social Network</Typography>
             </Box>
@@ -150,16 +167,47 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
 
         <FlexBetween gap="1rem">
           <FlexBetween gap="1rem">
-            <img src="../assets/linkedin.png" alt="linkedin" />
+            <Telegram sx={{ color: main }} />
+            {/* <img src="../assets/linkedin.png" alt="linkedin" /> */}
             <Box>
-              <Typography color={main} fontWeight="500">
-                Linkedin
+              <Typography color={main} fontWeight="500" textAlign="left">
+                Telegram
               </Typography>
               <Typography color={medium}>Network Platform</Typography>
             </Box>
           </FlexBetween>
           <EditOutlined sx={{ color: main }} />
         </FlexBetween>
+      </Box>
+      <Divider />
+
+      {/* FIFTH ROW - Create Page CTA */}
+      <Box p="1rem 0">
+        <Typography
+          fontSize="1rem"
+          color={main}
+          fontWeight="500"
+          mb="0.5rem"
+          textAlign="left"
+        >
+          Grow Your Presence
+        </Typography>
+        <Button
+          // variant="contained"
+          // color="primary"
+          // startIcon={<AddCircleOutline />}
+          onClick={() => navigate("/create-page")}
+          // fullWidth
+          sx={{
+            textTransform: "none",
+            color: palette.background.alt,
+            backgroundColor: palette.primary.main,
+            borderRadius: "3rem",
+          }}
+        >
+          <AddCircleOutline sx={{ marginRight: "5px" }} />
+          Create a New Page
+        </Button>
       </Box>
     </WidgetWrapper>
   );

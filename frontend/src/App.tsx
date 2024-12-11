@@ -18,6 +18,7 @@ import ProfileSetupPage from "./components/ProfileSetupPage";
 // import { useNavigate } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import { useNavigate } from "react-router-dom";
+import CreatePage from "./components/createPagePage";
 
 function App() {
   const mode = useSelector((state: RootState) => state.user.mode);
@@ -67,6 +68,7 @@ function App() {
             <Route path="/home" element={<HomePage />} />
 
             <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route path="/create-page" element={<CreatePage />} />
           </Routes>
         </ThemeProvider>
       </div>
