@@ -50,8 +50,8 @@ const PostsWidget = ({ userId, isProfile = false }: PostsWidgetProps) => {
       lastName: "Doe",
       description: "Hello World",
       location: "Tunis, Tunisia",
-      picturePath: "https://randomuser.me/api/portraits",
-      userPicturePath: "https://randomuser.me/api/portraits",
+      picturePath: "/assets/images/rock.jpg",
+      userPicturePath: "/assets/images/avatar default.png",
       likes: {
         "1": true,
       },
@@ -64,8 +64,8 @@ const PostsWidget = ({ userId, isProfile = false }: PostsWidgetProps) => {
       lastName: "Doe",
       description: "Hello World",
       location: "Tunis, Tunisia",
-      picturePath: "https://randomuser.me/api/portraits",
-      userPicturePath: "https://randomuser.me/api/portraits",
+      picturePath: "/assets/images/butterfly.jpg",
+      userPicturePath: "/assets/images/avatar default.png",
       likes: {
         "1": true,
       },
@@ -78,8 +78,8 @@ const PostsWidget = ({ userId, isProfile = false }: PostsWidgetProps) => {
       lastName: "Smith",
       description: "Hello World",
       location: "Tunis, Tunisia",
-      picturePath: "https://randomuser.me/api/portraits",
-      userPicturePath: "https://randomuser.me/api/portraits",
+      picturePath: "/assets/images/birds.jpg",
+      userPicturePath: "/assets/images/avatar default.png",
       likes: {
         "1": true,
       },

@@ -90,12 +90,12 @@ const ProfileSetupPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (!connectedAccount) {
-      console.error("No connected account found, redirecting to /");
-      navigate("/");
-    }
-  }, [connectedAccount, navigate]);
+  // useEffect(() => {
+  //   if (!connectedAccount) {
+  //     console.error("No connected account found, redirecting to /");
+  //     navigate("/");
+  //   }
+  // }, [connectedAccount, navigate]);
 
   return (
     <>

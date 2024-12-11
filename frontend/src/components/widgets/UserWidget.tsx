@@ -4,11 +4,13 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import { Box, Typography, Divider, useTheme, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import WidgetWrapper from "../WidgetWrapper";
 import FlexBetween from "../FlexBetween";
 import UserImage from "../UserImage";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 type UserWidgetProps = {
   userId: string;
@@ -23,8 +25,9 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const user = useSelector((state: RootState) => state.user.user);
 
-  const user = {
+  const userMock = {
     firstName: "Farouk",
     lastName: "Allani",
     location: "Tunis, Tunisia",
@@ -47,7 +50,7 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
   //   getUser();
   // }, []);
 
-  if (!user) {
+  if (!userMock) {
     return null;
   }
 
@@ -59,19 +62,15 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
     viewedProfile,
     impressions,
     friends,
-  } = user;
+  } = userMock;
 
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
-      <FlexBetween
-        gap="0.5rem"
-        pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
-      >
+      <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} />
-          <Box>
+          <Box onClick={() => navigate(`/profile/${userId}`)}>
             <Typography
               variant="h4"
               color={dark}
@@ -83,12 +82,17 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
                 },
               }}
             >
-              {firstName} {lastName}
+              {user?.name}
             </Typography>
             <Typography color={medium}>{friends.length} friends</Typography>
           </Box>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        <IconButton
+          onClick={() => navigate(`/profile-setup`)}
+          sx={{ cursor: "pointer" }}
+        >
+          <ManageAccountsOutlined />
+        </IconButton>
       </FlexBetween>
 
       <Divider />

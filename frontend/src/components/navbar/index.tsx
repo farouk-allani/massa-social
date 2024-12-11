@@ -57,7 +57,7 @@ const Navbar = () => {
   console.log("connected account address", connectedAccount?.address);
 
   // const fullName = `${user.firstName} ${user.lastName}`;
-  const fullName = shortenAddress(user.user?.address || "", 3);
+  // const fullName = shortenAddress(user.user?.address || "", 3);
 
   const handleAccountChange = async (selectedAddress: string) => {
     setSelectedAccount(selectedAddress);
@@ -207,7 +207,7 @@ const Navbar = () => {
               </MenuItem>
             </Select>
           </FormControl>
-          <Avatar
+          {/* <Avatar
             src={user.user?.avatar || "/images/avatar default.png"}
             alt={user.user?.name || "Placeholder Avatar"}
             sx={{
@@ -218,7 +218,7 @@ const Navbar = () => {
                 border: `2px solid ${primaryLight}`,
               },
             }}
-          />
+          /> */}
         </FlexBetween>
       ) : (
         <IconButton
@@ -274,7 +274,7 @@ const Navbar = () => {
             <Help sx={{ fontSize: "25px" }} />
             <FormControl variant="standard">
               <Select
-                value={fullName}
+                value={selectedAccount}
                 sx={{
                   backgroundColor: neutralLight,
                   width: "150px",
@@ -290,9 +290,24 @@ const Navbar = () => {
                 }}
                 input={<InputBase />}
               >
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
+                {currentWallet?.name() === WalletName.MassaStation ? (
+                  (accounts ?? []).map((account) => (
+                    <MenuItem
+                      key={account.address}
+                      value={account.address}
+                      onClick={() => handleAccountChange(account.address)}
+                    >
+                      {/* {account.accountName}  */}
+                      {shortenAddress(account.address, 3)}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value={selectedAccount}>
+                    <Typography>
+                      {shortenAddress(selectedAccount, 3)}
+                    </Typography>
+                  </MenuItem>
+                )}
                 <MenuItem onClick={handleMassaWalletDisconnect}>
                   Log Out
                 </MenuItem>

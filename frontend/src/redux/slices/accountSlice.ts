@@ -55,14 +55,35 @@ export const setWallet = createAsyncThunk(
         const newAccount = accounts[0];
         dispatch(setConnectedAccount(newAccount));
 
+        // const accountObserver = wallet.listenAccountChanges(
+        //   (newAddress: string) => {
+        //     const currentState = getState() as { account: AccountStoreState };
+        //     handleBearbyAccountChange(
+        //       newAddress,
+        //       currentState.account,
+        //       dispatch
+        //     );
+        //   }
+        // );
+
         const accountObserver = wallet.listenAccountChanges(
-          (newAddress: string) => {
+          async (newAddress: string) => {
+            console.log("Account changed to:", newAddress);
             const currentState = getState() as { account: AccountStoreState };
-            handleBearbyAccountChange(
-              newAddress,
-              currentState.account,
-              dispatch
-            );
+
+            try {
+              await handleBearbyAccountChange(
+                newAddress,
+                currentState.account,
+                dispatch
+              );
+              console.log(
+                "Updated connected account in state:",
+                currentState.account.connectedAccount
+              );
+            } catch (error) {
+              console.error("Error handling account change:", error);
+            }
           }
         );
 

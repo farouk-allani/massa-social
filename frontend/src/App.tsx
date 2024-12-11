@@ -31,8 +31,10 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("currentWallet&&&&", currentWallet);
+    console.log("connectedAccount&&&&&", connectedAccount);
     const checkProfile = async () => {
-      if (currentWallet && connectedAccount) {
+      if (currentWallet && connectedAccount?.address) {
         setIsCheckingProfile(true);
         await dispatch(checkUserProfile());
         setIsCheckingProfile(false);

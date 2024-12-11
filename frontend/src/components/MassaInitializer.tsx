@@ -10,9 +10,9 @@ import { Wallet, getWallets, WalletName } from "@massalabs/wallet-provider";
 
 const MassaInitializer: React.FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { currentWallet, connectedAccount } = useSelector(
-    (state: RootState) => state.account
-  );
+  // const { currentWallet, connectedAccount } = useSelector(
+  //   (state: RootState) => state.account
+  // );
 
   let pollingInterval: NodeJS.Timeout | null = null;
 
@@ -31,36 +31,37 @@ const MassaInitializer: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       if (selectedWallet) {
         dispatch(setWallet(selectedWallet));
-        setupAccountListener(selectedWallet);
+
+        // setupAccountListener(selectedWallet);
       }
     }
   }
 
-  const setupAccountListener = (wallet: Wallet) => {
-    if (wallet.name() === WalletName.Bearby) {
-      const accountObserver = wallet.listenAccountChanges(
-        async (newAddress: string) => {
-          console.log("Bearby wallet account changed too", newAddress);
+  // const setupAccountListener = (wallet: Wallet) => {
+  //   if (wallet.name() === WalletName.Bearby) {
+  //     const accountObserver = wallet.listenAccountChanges(
+  //       async (newAddress: string) => {
+  //         console.log("Bearby wallet account changed too", newAddress);
 
-          const accounts = await wallet.accounts();
-          const newAccount = accounts.find((acc) => acc.address === newAddress);
+  //         const accounts = await wallet.accounts();
+  //         const newAccount = accounts.find((acc) => acc.address === newAddress);
 
-          if (newAccount) {
-            dispatch(setConnectedAccount(newAccount));
-          } else {
-            console.warn("Account not found after account change.");
-            dispatch(setConnectedAccount(undefined));
-          }
-        }
-      );
+  //         if (newAccount) {
+  //           dispatch(setConnectedAccount(newAccount));
+  //         } else {
+  //           console.warn("Account not found after account change.");
+  //           dispatch(setConnectedAccount(undefined));
+  //         }
+  //       }
+  //     );
 
-      return () => {
-        if (accountObserver) {
-          accountObserver.unsubscribe();
-        }
-      };
-    }
-  };
+  //     return () => {
+  //       if (accountObserver) {
+  //         accountObserver.unsubscribe();
+  //       }
+  //     };
+  //   }
+  // };
 
   useEffect(() => {
     initAccountStore();

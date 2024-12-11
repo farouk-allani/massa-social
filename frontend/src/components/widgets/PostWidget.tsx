@@ -43,6 +43,8 @@ const PostWidget = ({
   // const loggedInUserId = useSelector((state: RootState) => state.user.user._id);
   // const isLiked = Boolean(likes[loggedInUserId]);
   // const likeCount = Object.keys(likes).length;
+  const isLiked = true;
+  const likeCount = 5;
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -78,7 +80,7 @@ const PostWidget = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={`${picturePath}`}
         />
       )}
       <FlexBetween mt="0.25rem">
@@ -87,13 +89,13 @@ const PostWidget = ({
             <IconButton
             //  onClick={patchLike}
             >
-              {/* {isLiked ? (
+              {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
                 <FavoriteBorderOutlined />
-              )} */}
+              )}
             </IconButton>
-            {/* <Typography>{likeCount}</Typography> */}
+            <Typography>{likeCount}</Typography>
           </FlexBetween>
 
           <FlexBetween gap="0.3rem">

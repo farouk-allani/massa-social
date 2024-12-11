@@ -35,21 +35,21 @@ const FriendListWidget = ({ userId }: FriendListWidgetProps) => {
       firstName: "John",
       lastName: "Doe",
       occupation: "Software Engineer",
-      picturePath: "https://randomuser.me/api/portraits",
+      picturePath: "/assets/images/avatar default.png",
     },
     {
       _id: "2",
       firstName: "Jane",
       lastName: "Doe",
       occupation: "Software Engineer",
-      picturePath: "https://randomuser.me/api/portraits",
+      picturePath: "/assets/images/avatar default.png",
     },
     {
       _id: "3",
       firstName: "John",
       lastName: "Smith",
       occupation: "Software Engineer",
-      picturePath: "https://randomuser.me/api/portraits",
+      picturePath: "/assets/images/avatar default.png",
     },
   ];
 
@@ -60,8 +60,9 @@ const FriendListWidget = ({ userId }: FriendListWidgetProps) => {
         variant="h5"
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
+        textAlign="left"
       >
-        Friend List
+        Friends List
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
         {friends.map((friend) => (
