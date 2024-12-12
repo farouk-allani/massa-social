@@ -1,11 +1,7 @@
 import {
   EditOutlined,
   DeleteOutlined,
-  AttachFileOutlined,
-  GifBoxOutlined,
   ImageOutlined,
-  MicOutlined,
-  MoreHorizOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -16,13 +12,12 @@ import {
   Button,
   IconButton,
   useMediaQuery,
+  Collapse,
 } from "@mui/material";
 
 import Dropzone from "react-dropzone";
-
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { setPosts } from "state";
 import { RootState } from "../../redux/store";
 import WidgetWrapper from "../WidgetWrapper";
 import FlexBetween from "../FlexBetween";
@@ -35,11 +30,8 @@ type MyPostWidgetProps = {
 const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
-  const [image, setImage] = useState(null);
-  // const [post, setPost] = useState("");
+  const [image, setImage] = useState<File | null>(null);
   const { palette } = useTheme();
-  // const { _id } = useSelector((state: RootState) => state.user.user);
-  // const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
@@ -53,8 +45,6 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
         />
         <InputBase
           placeholder="What's on your mind..."
-          // onChange={(e) => setPost(e.target.value)}
-          // value={post}
           sx={{
             width: "100%",
             backgroundColor: palette.neutral.light,
@@ -63,7 +53,9 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
           }}
         />
       </FlexBetween>
-      {isImage && (
+
+      {/* Smoothly collapse/expand the image upload area */}
+      <Collapse in={isImage} timeout="auto" unmountOnExit>
         <Box
           border={`1px solid ${medium}`}
           borderRadius="5px"
@@ -71,9 +63,8 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
           p="1rem"
         >
           <Dropzone
-            // acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
-            // onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
+            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
           >
             {({ getRootProps, getInputProps }) => (
               <FlexBetween>
@@ -86,11 +77,14 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
                 >
                   <input {...getInputProps()} />
                   {!image ? (
-                    <p>Add Image Here</p>
+                    <Typography color={palette.neutral.main}>
+                      Add Image Here
+                    </Typography>
                   ) : (
                     <FlexBetween>
-                      {/* <Typography>{image.name}</Typography> */}
-                      <Typography>image name</Typography>
+                      <Typography color={palette.neutral.main}>
+                        {image.name}
+                      </Typography>
                       <EditOutlined />
                     </FlexBetween>
                   )}
@@ -98,7 +92,7 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
                 {image && (
                   <IconButton
                     onClick={() => setImage(null)}
-                    sx={{ width: "15%" }}
+                    sx={{ marginLeft: "1rem" }}
                   >
                     <DeleteOutlined />
                   </IconButton>
@@ -107,51 +101,26 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
             )}
           </Dropzone>
         </Box>
-      )}
+      </Collapse>
 
       <Divider sx={{ margin: "1.25rem 0" }} />
 
       <FlexBetween>
-        <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
+        <FlexBetween
+          gap="0.25rem"
+          onClick={() => setIsImage(!isImage)}
+          sx={{ "&:hover": { cursor: "pointer", color: medium } }}
+        >
           <ImageOutlined sx={{ color: mediumMain }} />
-          <Typography
-            color={mediumMain}
-            sx={{ "&:hover": { cursor: "pointer", color: medium } }}
-          >
-            Image
-          </Typography>
+          <Typography color={mediumMain}>Image</Typography>
         </FlexBetween>
 
-        {/* {isNonMobileScreens ? (
-          <>
-            <FlexBetween gap="0.25rem">
-              <GifBoxOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Clip</Typography>
-            </FlexBetween>
-
-            <FlexBetween gap="0.25rem">
-              <AttachFileOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Attachment</Typography>
-            </FlexBetween>
-
-            <FlexBetween gap="0.25rem">
-              <MicOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Audio</Typography>
-            </FlexBetween>
-          </>
-        ) : (
-          <FlexBetween gap="0.25rem">
-            <MoreHorizOutlined sx={{ color: mediumMain }} />
-          </FlexBetween>
-        )} */}
-
         <Button
-          // disabled={!post}
-          // onClick={handlePost}
           sx={{
             color: palette.background.alt,
             backgroundColor: palette.primary.main,
             borderRadius: "8px",
+            textTransform: "none",
           }}
         >
           POST

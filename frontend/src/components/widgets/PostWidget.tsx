@@ -4,15 +4,21 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Typography,
+  useTheme,
+  Collapse,
+  TextField,
+  Button,
+} from "@mui/material";
 
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
 import WidgetWrapper from "../WidgetWrapper";
 import Friend from "../Friend";
 import FlexBetween from "../FlexBetween";
-// import { setPost } from "state";
 
 type PostWidgetProps = {
   postId: string;
@@ -38,11 +44,7 @@ const PostWidget = ({
   comments,
 }: PostWidgetProps) => {
   const [isComments, setIsComments] = useState(false);
-  // const dispatch = useDispatch();
-  // const token = useSelector((state) => state.token);
-  // const loggedInUserId = useSelector((state: RootState) => state.user.user._id);
-  // const isLiked = Boolean(likes[loggedInUserId]);
-  // const likeCount = Object.keys(likes).length;
+  const [newComment, setNewComment] = useState("");
   const isLiked = true;
   const likeCount = 5;
 
@@ -50,18 +52,9 @@ const PostWidget = ({
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
-  // const patchLike = async () => {
-  //   const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-  //     method: "PATCH",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ userId: loggedInUserId }),
-  //   });
-  //   const updatedPost = await response.json();
-  //   dispatch(setPost({ post: updatedPost }));
-  // };
+  const handleAddComment = () => {
+    setNewComment("");
+  };
 
   return (
     <WidgetWrapper m="2rem 0">
@@ -83,12 +76,11 @@ const PostWidget = ({
           src={`${picturePath}`}
         />
       )}
+
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton
-            //  onClick={patchLike}
-            >
+            <IconButton>
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
@@ -102,9 +94,9 @@ const PostWidget = ({
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-
             <Typography>{comments.length}</Typography>
             <IconButton>
+              {/* Repost/Forward Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24px"
@@ -124,7 +116,9 @@ const PostWidget = ({
           <ShareOutlined />
         </IconButton>
       </FlexBetween>
-      {isComments && (
+
+      {/* Smooth transition for comments and input field */}
+      <Collapse in={isComments} timeout="auto" unmountOnExit>
         <Box mt="0.5rem">
           {comments.map((comment, i) => (
             <Box key={`${name}-${i}`}>
@@ -134,9 +128,48 @@ const PostWidget = ({
               </Typography>
             </Box>
           ))}
-          <Divider />
+          {comments.length > 0 && <Divider />}
+
+          {/* Add a new comment input */}
+          <Box
+            display="flex"
+            alignItems="center"
+            gap="0.5rem"
+            mt="1rem"
+            pl="1rem"
+            pr="1rem"
+          >
+            <TextField
+              variant="outlined"
+              placeholder="Add a comment..."
+              fullWidth
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+            <Button
+              // variant="contained"
+              onClick={handleAddComment}
+              disabled={!newComment.trim()}
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: palette.primary.main,
+                borderRadius: "8px",
+                textTransform: "none",
+                "&.Mui-disabled": {
+                  color: "white",
+                },
+              }}
+            >
+              Post
+            </Button>
+          </Box>
         </Box>
-      )}
+      </Collapse>
     </WidgetWrapper>
   );
 };
