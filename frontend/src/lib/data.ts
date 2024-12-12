@@ -18,3 +18,24 @@ export const features = [
     icon: "/assets/images/community.png",
   },
 ];
+
+export const suggestedPages = [
+  {
+    name: "Blockchain Enthusiasts",
+    description: "A group for blockchain and crypto discussions.",
+    avatar: "/assets/images/Blockchain-in-hiring.png",
+    pageId: "blockchain-enthusiasts",
+  },
+  {
+    name: "Massa Developers",
+    description: "Join the developers building on the Massa Network.",
+    avatar: "/assets/images/massa.jpg",
+    pageId: "massa-developers",
+  },
+  {
+    name: "Decentralized Art",
+    description: "Explore and share art in the decentralized world.",
+    avatar: "/assets/images/Blockchain-art-scaled.jpg",
+    pageId: "decentralized-art",
+  },
+];

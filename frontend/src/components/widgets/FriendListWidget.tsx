@@ -1,7 +1,9 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 // import { setFriends } from "state";
 import Friend from "../Friend";
 import WidgetWrapper from "../WidgetWrapper";
+import { useState } from "react";
+import AddFriendModal from "../AddFriendModal";
 
 type FriendListWidgetProps = {
   userId: string | undefined;
@@ -10,24 +12,12 @@ type FriendListWidgetProps = {
 const FriendListWidget = ({ userId }: FriendListWidgetProps) => {
   // const dispatch = useDispatch();
   const { palette } = useTheme();
-  // const token = useSelector((state) => state.token);
-  // const friends = useSelector((state:RootState) => state.user.friends);
 
-  // const getFriends = async () => {
-  //   const response = await fetch(
-  //     `http://localhost:3001/users/${userId}/friends`,
-  //     {
-  //       method: "GET",
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     }
-  //   );
-  //   const data = await response.json();
-  //   dispatch(setFriends({ friends: data }));
-  // };
+  const [openAddFriendModal, setOpenAddFriendModal] = useState(false);
 
-  // useEffect(() => {
-  //   getFriends();
-  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const handleAddFriend = (walletAddress: string) => {
+    console.log("Friend to be added:", walletAddress);
+  };
 
   const friends = [
     {
@@ -55,15 +45,33 @@ const FriendListWidget = ({ userId }: FriendListWidgetProps) => {
 
   return (
     <WidgetWrapper>
-      <Typography
-        color={palette.neutral.dark}
-        variant="h5"
-        fontWeight="500"
-        sx={{ mb: "1.5rem" }}
-        textAlign="left"
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="flex-start"
+        mb="1.5rem"
       >
-        Friends List
-      </Typography>
+        <Typography
+          color={palette.neutral.dark}
+          variant="h5"
+          fontWeight="500"
+          sx={{ mb: "1.5rem" }}
+          textAlign="left"
+        >
+          Friends List
+        </Typography>
+        <Button
+          onClick={() => setOpenAddFriendModal(true)}
+          variant="outlined"
+          color="primary"
+          sx={{
+            textTransform: "none",
+            borderRadius: "8px",
+          }}
+        >
+          Add Friend
+        </Button>
+      </Box>
       <Box display="flex" flexDirection="column" gap="1.5rem">
         {friends.map((friend) => (
           <Friend
@@ -75,6 +83,11 @@ const FriendListWidget = ({ userId }: FriendListWidgetProps) => {
           />
         ))}
       </Box>
+      <AddFriendModal
+        open={openAddFriendModal}
+        handleClose={() => setOpenAddFriendModal(false)}
+        onAddFriend={handleAddFriend}
+      />
     </WidgetWrapper>
   );
 };

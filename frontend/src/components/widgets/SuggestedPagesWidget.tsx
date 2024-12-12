@@ -1,33 +1,13 @@
 import { Typography, Button, Box, Avatar, useTheme } from "@mui/material";
 import WidgetWrapper from "../WidgetWrapper";
 import FlexBetween from "../FlexBetween";
+import { suggestedPages } from "../../lib/data";
 
 const SuggestedPagesWidget = () => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
-
-  const suggestedPages = [
-    {
-      name: "Blockchain Enthusiasts",
-      description: "A group for blockchain and crypto discussions.",
-      avatar: "/assets/images/Blockchain-in-hiring.png",
-      pageId: "blockchain-enthusiasts",
-    },
-    {
-      name: "Massa Developers",
-      description: "Join the developers building on the Massa Network.",
-      avatar: "/assets/images/massa.jpg",
-      pageId: "massa-developers",
-    },
-    {
-      name: "Decentralized Art",
-      description: "Explore and share art in the decentralized world.",
-      avatar: "/assets/images/Blockchain-art-scaled.jpg",
-      pageId: "decentralized-art",
-    },
-  ];
 
   return (
     <WidgetWrapper>
@@ -68,6 +48,7 @@ const SuggestedPagesWidget = () => {
             sx={{
               textTransform: "none",
               marginLeft: "5px",
+              borderRadius: "8px",
             }}
             onClick={() => (window.location.href = `/pages/${page.pageId}`)}
           >

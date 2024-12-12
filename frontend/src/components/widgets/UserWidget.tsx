@@ -202,7 +202,7 @@ const UserWidget = ({ userId, picturePath }: UserWidgetProps) => {
             textTransform: "none",
             color: palette.background.alt,
             backgroundColor: palette.primary.main,
-            borderRadius: "3rem",
+            borderRadius: "8px",
           }}
         >
           <AddCircleOutline sx={{ marginRight: "5px" }} />

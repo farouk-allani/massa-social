@@ -17,9 +17,6 @@ type FriendProps = {
 const Friend = ({ friendId, name, subtitle, userPicturePath }: FriendProps) => {
   // const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { _id } = useSelector((state: RootState) => state.user.user);
-  // const token = useSelector((state: RootState) => state.token);
-  // const friends = useSelector((state: RootState) => state.user.friends);
 
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;

@@ -45,47 +45,6 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
   const medium = palette.neutral.medium;
   const user = useSelector((state: RootState) => state.user);
 
-  // const handlePost = async () => {
-  //   const formData = new FormData();
-  //   formData.append("userId", _id);
-  //   formData.append("description", post);
-  //   if (image) {
-  //     formData.append("picture", image);
-  //     formData.append("picturePath", image.name);
-  //   }
-
-  //   const response = await fetch(`http://localhost:3001/posts`, {
-  //     method: "POST",
-  //     headers: { Authorization: `Bearer ${token}` },
-  //     body: formData,
-  //   });
-  //   const posts = await response.json();
-  //   dispatch(setPosts({ posts }));
-  //   setImage(null);
-  //   setPost("");
-  // };
-
-  const posts = [
-    {
-      _id: "1",
-      userId: "1",
-      description: "Hello World",
-      picturePath: "https://randomuser.me/api/portraits",
-    },
-    {
-      _id: "2",
-      userId: "2",
-      description: "Hello World",
-      picturePath: "https://randomuser.me/api/portraits",
-    },
-    {
-      _id: "3",
-      userId: "3",
-      description: "Hello World",
-      picturePath: "https://randomuser.me/api/portraits",
-    },
-  ];
-
   return (
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
@@ -192,7 +151,7 @@ const MyPostWidget = ({ picturePath }: MyPostWidgetProps) => {
           sx={{
             color: palette.background.alt,
             backgroundColor: palette.primary.main,
-            borderRadius: "3rem",
+            borderRadius: "8px",
           }}
         >
           POST
