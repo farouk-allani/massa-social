@@ -19,6 +19,7 @@ import ProfileSetupPage from "./components/ProfileSetupPage";
 import LandingPage from "./components/LandingPage";
 import { useNavigate } from "react-router-dom";
 import CreatePage from "./components/createPagePage";
+import LearnMorePage from "./components/LearnMorePage";
 
 function App() {
   const mode = useSelector((state: RootState) => state.user.mode);
@@ -62,6 +63,7 @@ function App() {
           </Backdrop>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/learn-more" element={<LearnMorePage />} />
             {/* {user === null && isCheckingProfile == false ? ( */}
             <Route path="/profile-setup" element={<ProfileSetupPage />} />
 

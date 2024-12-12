@@ -9,12 +9,14 @@ import {
 } from "@mui/material";
 import ConnectWalletModal from "../ConnectWalletModal";
 import { features } from "../../lib/data";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 const LandingPage = (props: Props) => {
   const [openConnectWalletModal, setOpenConnectWalletModal] =
     React.useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <ConnectWalletModal
@@ -187,7 +189,6 @@ const LandingPage = (props: Props) => {
           <Button
             variant="outlined"
             size="large"
-            href="https://massa.net/"
             sx={{
               backgroundColor: "#FFCCCC",
               transitionTimingFunction: "ease-in-out",
@@ -213,6 +214,7 @@ const LandingPage = (props: Props) => {
                 borderColor: "#FF9999",
               },
             }}
+            onClick={() => navigate("/learn-more")}
           >
             Learn More
           </Button>
@@ -311,14 +313,25 @@ const LandingPage = (props: Props) => {
           size="large"
           sx={{
             backgroundColor: (theme) => theme.palette.primary.main,
+            transitionTimingFunction: "ease-in-out",
+            transitionProperty:
+              "background-color, border-color, color, fill, stroke, opacity, box-shadow, transform",
+            cursor: "pointer",
+            fontSize: "1.0625rem",
             color: "#fff",
+            transitionDuration: ".15s",
             textTransform: "none",
-            paddingX: "2rem",
-            paddingY: "1rem",
-            borderRadius: "8px",
-            fontWeight: "bold",
+            borderRadius: "16px",
+            paddingX: {
+              xs: "30px",
+              sm: "50px",
+            },
+            height: "56px",
+            width: "auto",
+            fontWeight: "550",
             "&:hover": {
-              backgroundColor: (theme) => theme.palette.primary.dark,
+              boxShadow: (theme) =>
+                `0 0 0 .125rem ${theme.palette.primary.main}`,
             },
           }}
           onClick={() => setOpenConnectWalletModal(true)}
