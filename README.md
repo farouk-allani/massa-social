@@ -142,8 +142,6 @@ The following data structures are essential for the smart contracts on the Massa
 ### 1. User
 
 ```typescript
-// src/contracts/models/User.ts
-
 export class SocialProfiles {
   x: string | null;       // X (formerly Twitter) handle or URL
   telegram: string | null;// Telegram handle or URL
@@ -160,6 +158,7 @@ export class User {
   avatar: string | null;          // URL or IPFS hash of the avatar image
   country: string;                // User's country
   city: string;                   // User's city
+  bio: string | null;             // Short biography or description
   friends: string[];              // List of friends' wallet addresses
   followedPages: string[];        // List of followed pages' IDs
   socialProfiles: SocialProfiles; // Links to social profiles
@@ -169,6 +168,7 @@ export class User {
     name: string,
     country: string,
     city: string,
+    bio: string | null = null,
     avatar: string | null = null,
     socialProfiles: SocialProfiles = new SocialProfiles()
   ) {
@@ -177,6 +177,7 @@ export class User {
     this.avatar = avatar;
     this.country = country;
     this.city = city;
+    this.bio = bio;
     this.friends = [];
     this.followedPages = [];
     this.socialProfiles = socialProfiles;
